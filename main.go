@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/DKeshavarz/sinar/internal/config"
 	"github.com/DKeshavarz/sinar/internal/interface/redis"
 	"github.com/DKeshavarz/sinar/internal/interface/server"
 	"github.com/DKeshavarz/sinar/internal/interface/sms"
@@ -11,7 +12,9 @@ import (
 )
 
 func main(){
-	otpStorage := redis.New()
+	conf := config.New()
+	otpStorage := redis.New(*conf.Redis)
+	
 	otpSender := sms.New("ff", "fff")
 	optUsecase := usecase.NewOtpService(5, 2 * time.Second, otpStorage, otpSender)
 	server := server.New(optUsecase)

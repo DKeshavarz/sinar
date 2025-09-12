@@ -15,12 +15,15 @@ type RedisOTPStore struct {
 	client *redis.Client
 }
 
-func New() usecase.OtpStore {
+func New(conf Config) usecase.OtpStore {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // No password set
-		DB:       0,  // Use default DB
-		Protocol: 2,  // Connection protocol
+		Addr: conf.Addr,
+		Password: conf.Password,
+		DB: conf.DB,
+		// Addr:     "localhost:6379",
+		// Password: "", // No password set
+		// DB:       0,  // Use default DB
+		// Protocol: 2,  // Connection protocol
 	})
 
 	ctx := context.Background()
