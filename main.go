@@ -13,9 +13,10 @@ import (
 
 func main(){
 	conf := config.New()
+
 	otpStorage := redis.New(*conf.Redis)
-	
-	otpSender := sms.New("ff", "fff")
+	otpSender := sms.New(*conf.SMS)
+
 	optUsecase := usecase.NewOtpService(5, 2 * time.Second, otpStorage, otpSender)
 	server := server.New(optUsecase)
 

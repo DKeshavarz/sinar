@@ -1,6 +1,9 @@
 package config
 
-import "github.com/DKeshavarz/sinar/internal/interface/redis"
+import (
+	"github.com/DKeshavarz/sinar/internal/interface/redis"
+	"github.com/DKeshavarz/sinar/internal/interface/sms"
+)
 
 func New() *Config{
 
@@ -10,8 +13,13 @@ func New() *Config{
 		DB: GetEnvAsInt("REDIS_DB", 0),
 	}
 
+	s := sms.Config {
+		ApiKey: GetEnv("SMS_APIKEY", ""),
+		Sender: GetEnv("SMS_SENDER", ""),
+	}
 	conf := Config{
 		Redis: &r,
+		SMS: &s,
 	}
 
 	return &conf

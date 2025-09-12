@@ -2,6 +2,7 @@ package sms
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/DKeshavarz/sinar/internal/usecase"
 	"github.com/kavenegar/kavenegar-go"
@@ -12,13 +13,15 @@ type smsSender struct {
 	sender string
 }
 
-func New(apiKey, sender string) usecase.OtpSender {
+func New(conf Config) usecase.OtpSender {
+	log.Println(conf.ApiKey)
 	return &smsSender{
-		api: kavenegar.New(apiKey),
-		sender: sender,
+		api: kavenegar.New(conf.ApiKey),
+		sender: conf.Sender,
 	}
 }
-func (s *smsSender) Send(message string, receptor... string) error {
+func (s *smsSender) Send(message string, receptor ...string) error { 
+	
 	if res, err := s.api.Message.Send(s.sender, receptor, message, nil); err != nil {
 		// switch err := err.(type) {
 		// case *kavenegar.APIError:

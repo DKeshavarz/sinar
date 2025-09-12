@@ -36,11 +36,12 @@ func NewOtpService(len int, ttl time.Duration, storage OtpStore, sender  OtpSend
 }
 
 func (s *OtpService) RequestOTP(phone string) error {
+	log.Println("sending for ", phone)
 	code, err := generateCode(s.len)
 	if err != nil {
 		return err
 	}
-
+	log.Println("code is ", code)
 	if err := s.storage.Create(phone, code, s.ttl); err != nil {
 		return err
 	}
