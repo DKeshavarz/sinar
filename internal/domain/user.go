@@ -11,7 +11,3 @@ type User struct {
 	UpdatedAt      time.Time `json:"updated_at"`
 }
 
-type otp struct {
-	Key  string `json:"key"`
-	Code string `json:"code"`
-}
