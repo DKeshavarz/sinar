@@ -20,14 +20,15 @@ func New(apiKey, sender string) usecase.OtpSender {
 }
 func (s *smsSender) Send(message string, receptor... string) error {
 	if res, err := s.api.Message.Send(s.sender, receptor, message, nil); err != nil {
-		switch err := err.(type) {
-		case *kavenegar.APIError:
-		  fmt.Println(err.Error())
-		case *kavenegar.HTTPError:
-		  fmt.Println(err.Error())
-		default:
-		  fmt.Println(err.Error())
-		}
+		// switch err := err.(type) {
+		// case *kavenegar.APIError:
+		//   fmt.Println(err.Error())
+		// case *kavenegar.HTTPError:
+		//   fmt.Println(err.Error())
+		// default:
+		//   fmt.Println(err.Error())
+		// }
+		return err
 	}else {
 		for _, r := range res {
 		  fmt.Println("MessageID   = ", r.MessageID)
