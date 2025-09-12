@@ -16,7 +16,7 @@ type OtpStore interface {
 }
 
 type OtpSender interface {
-	Send(receptor, message string) error
+	Send(message string, receptors ...string) error
 }
 type OtpService struct {
 	len     int
@@ -80,6 +80,6 @@ func generateCode(length int) (string, error) {
 		}
 		otp[i] = digits[n.Int64()]
 	}
-	
+
 	return string(otp), nil
 }
