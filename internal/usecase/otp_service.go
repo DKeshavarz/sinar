@@ -25,11 +25,13 @@ type OtpService struct {
 	sender  OtpSender
 }
 
-func NewOtpService(len int, ttl time.Duration) *OtpService {
+func NewOtpService(len int, ttl time.Duration, storage OtpStore, sender  OtpSender) *OtpService {
 
 	return &OtpService{
 		len: len,
 		ttl: ttl,
+		storage: storage,
+		sender: sender,
 	}
 }
 
@@ -39,9 +41,11 @@ func (s *OtpService) RequestOTP(phone string) error {
 		return err
 	}
 
-	if err = s.storage.Create(phone, code, s.ttl); err != nil {
+	if err := s.storage.Create(phone, code, s.ttl); err != nil {
 		return err
 	}
+
+	log.Println("lest's go to send otp")
 
 	if err := s.sender.Send(phone, code); err != nil {
 		return err
