@@ -42,7 +42,7 @@ func (o *OTPHandler) RequestOTP(c *gin.Context) {
 func (h *OTPHandler) VerifyOTP(c *gin.Context) {
 	var req struct {
 		Phone string `json:"phone" binding:"required"`
-		OTP    string `json:"otp" binding:"required,len=6"`
+		OTP    string `json:"otp" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
