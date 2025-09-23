@@ -7,8 +7,8 @@ import (
 	"github.com/DKeshavarz/sinar/internal/config"
 	"github.com/DKeshavarz/sinar/internal/interface/redis"
 	"github.com/DKeshavarz/sinar/internal/interface/server"
-	"github.com/DKeshavarz/sinar/internal/interface/sms"
 	"github.com/DKeshavarz/sinar/internal/usecase"
+	"github.com/DKeshavarz/sinar/pkg/sms"
 )
 
 func main(){

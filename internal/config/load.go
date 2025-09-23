@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/DKeshavarz/sinar/internal/interface/redis"
-	"github.com/DKeshavarz/sinar/internal/interface/sms"
+	"github.com/DKeshavarz/sinar/pkg/sms"
 )
 
 func New() *Config{
