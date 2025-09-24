@@ -1,13 +1,14 @@
-package models
+package domain
 
 type User struct {
-	ID         int    `json:"id"`
-	FirstName  string `json:"first_name"`
-	LastName   string `json:"last_name"`
-	Phone      string `json:"phone"`
-	ProfilePic string `json:"profile_pic"`
-	StudentNum string `json:"student_num"`
-	Sex        bool   `json:"sex"`
+	ID         int        `json:"id"`
+	FirstName  string     `json:"first_name"`
+	LastName   string     `json:"last_name"`
+	Phone      string     `json:"phone"`
+	ProfilePic string     `json:"profile_pic"`
+	StudentNum string     `json:"student_num"`
+	Sex        bool       `json:"sex"`
+	University University `json:"university"`
 }
 
 type University struct {
@@ -30,12 +31,8 @@ type Food struct {
 	Name string `json:"name"`
 }
 
-type UserUniversity struct {
-	UserID       int `json:"user_id"`
-	UniversityID int `json:"university_id"`
-}
-
 type UserFood struct {
+	ID           int     `json:"id"`
 	UserID       int     `json:"user_id"`
 	FoodID       int     `json:"food_id"`
 	RestaurantID int     `json:"Restaurant_id"`
