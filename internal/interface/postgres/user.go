@@ -10,6 +10,12 @@ type UserRepository struct {
     DB *sql.DB
 }
 
+func NewUserRepository() *UserRepository{
+	return &UserRepository{
+		DB: getDB(),
+	}
+}
+
 func (r *UserRepository) GetByStudentNumber(number string) (*dto.UserWithUniversity, error) {
     if number == "" {
         return nil, errors.New("student number cannot be empty")
