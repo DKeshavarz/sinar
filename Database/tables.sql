@@ -1,3 +1,10 @@
+CREATE TABLE universities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    location VARCHAR(255),
+    logo VARCHAR(255)
+);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(255),
@@ -9,12 +16,6 @@ CREATE TABLE users (
     university_id INTEGER REFERENCES universities(id)
 );
 
-CREATE TABLE universities (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255),
-    location VARCHAR(255),
-    logo VARCHAR(255)
-);
 
 CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY,
