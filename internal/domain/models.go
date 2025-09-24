@@ -1,14 +1,14 @@
 package domain
 
 type User struct {
-	ID         int        `json:"id"`
-	FirstName  string     `json:"first_name"`
-	LastName   string     `json:"last_name"`
-	Phone      string     `json:"phone"`
-	ProfilePic string     `json:"profile_pic"`
-	StudentNum string     `json:"student_num"`
-	Sex        bool       `json:"sex"`
-	University University `json:"university"`
+	ID           int    `json:"id"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	Phone        string `json:"phone"`
+	ProfilePic   string `json:"profile_pic"`
+	StudentNum   string `json:"student_num"`
+	Sex          bool   `json:"sex"`
+	UniversityID int    `json:"university_id"`
 }
 
 type University struct {
