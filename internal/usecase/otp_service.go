@@ -46,7 +46,7 @@ func (s *OtpService) RequestOTP(phone string) error {
 		return err
 	}
 
-	log.Println("lest's go to send otp")
+	log.Println("let's go to send otp")
 
 	if err := s.sender.Send(code, phone); err != nil {
 		return err
