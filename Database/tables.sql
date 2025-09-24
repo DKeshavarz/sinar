@@ -5,7 +5,8 @@ CREATE TABLE users (
     phone VARCHAR(20),
     profile_pic VARCHAR(255),
     student_num VARCHAR(50),
-    sex BOOLEAN
+    sex BOOLEAN,
+    university_id INTEGER REFERENCES universities(id)
 );
 
 CREATE TABLE universities (
@@ -28,19 +29,13 @@ CREATE TABLE foods (
     name VARCHAR(255)
 );
 
-CREATE TABLE user_universities (
-    user_id INTEGER REFERENCES users(id),
-    university_id INTEGER REFERENCES universities(id),
-    PRIMARY KEY (user_id, university_id)
-);
-
 CREATE TABLE user_foods (
+    id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     food_id INTEGER REFERENCES foods(id),
     restaurant_id INTEGER REFERENCES restaurants(id),
     price BIGINT,
     sinar_price BIGINT,
     code VARCHAR(20),
-    ttl INTEGER,
-    PRIMARY KEY (user_id, food_id, restaurant_id)
+    ttl INTEGER
 );
