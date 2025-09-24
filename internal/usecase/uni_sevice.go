@@ -11,6 +11,16 @@ type Univercity interface {
 }
 
 type univercity struct{
-
+	uniRepo UnivercityStore
 } 
+
+func NewUnivercity(storage UnivercityStore) Univercity{
+	return &univercity{
+		uniRepo: storage,
+	}
+}
+
+func (u *univercity)Get(id int)(*domain.University, error){
+	return u.uniRepo.Get(id)
+}
 
