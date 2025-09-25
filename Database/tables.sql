@@ -38,5 +38,6 @@ CREATE TABLE user_foods (
     price BIGINT,
     sinar_price BIGINT,
     code VARCHAR(20),
-    ttl INTEGER
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL
 );

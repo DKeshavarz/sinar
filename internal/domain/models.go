@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type User struct {
 	ID           int    `json:"id"`
 	FirstName    string `json:"first_name"`
@@ -32,12 +34,13 @@ type Food struct {
 }
 
 type UserFood struct {
-	ID           int    `json:"id"`
-	UserID       int    `json:"user_id"`
-	FoodID       int    `json:"food_id"`
-	RestaurantID int    `json:"Restaurant_id"`
-	Price        int    `json:"price"`
-	SinarPrice   int    `json:"sinar_price"`
-	Code         string `json:"code"`
-	TTL          int    `json:"ttl"`
+	ID           int       `json:"id"`
+	UserID       int       `json:"user_id"`
+	FoodID       int       `json:"food_id"`
+	RestaurantID int       `json:"Restaurant_id"`
+	Price        int       `json:"price"`
+	SinarPrice   int       `json:"sinar_price"`
+	Code         string    `json:"code"`
+	CreatedAt    time.Time `json:"created_at"`
+	ExpiresAt    time.Time `json:"expires_at"`
 }
