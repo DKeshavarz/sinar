@@ -23,7 +23,9 @@ func main() {
 	userUsecase := usecase.NewUser(userRepo)
 	universityRepo := pg.NewUniversityRepository()
 	universityUsecase := usecase.NewUnivercity(universityRepo)
-	server := server.New(optUsecase, userUsecase, universityUsecase)
+	userFoodRepo := pg.NewUserFoodRepository()
+	userFoodUsecase := usecase.NewUserFood(userFoodRepo)
+	server := server.New(optUsecase, userUsecase, universityUsecase, userFoodUsecase)
 
 	if err := server.Run(":8080"); err != nil {
 		fmt.Println(err)

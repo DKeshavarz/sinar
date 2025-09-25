@@ -11,13 +11,17 @@ import (
 type UserFoodStore interface {
 	GetAll() ([]*dto.UserFood, error)
 	GetByID(id int) (*dto.UserFood, error)
+	GetActive() ([]*dto.UserFood, error)
 	Create(userFood *domain.UserFood) error
+	MarkAsUsed(id int) error
 }
 
 type UserFood interface {
 	GetAll() ([]*dto.UserFood, error)
 	GetByID(id int) (*dto.UserFood, error)
+	GetActive() ([]*dto.UserFood, error)
 	Purchase(userID, foodID, restaurantID, price, sinarPrice int, code string, expirationHours int) (*domain.UserFood, error)
+	MarkAsUsed(id int) error
 }
 
 type userFood struct {
@@ -85,4 +89,19 @@ func (uf *userFood) Purchase(userID, foodID, restaurantID, price, sinarPrice int
 	}
 
 	return userFood, nil
+}
+
+func (uf *userFood) GetActive() ([]*dto.UserFood, error) {
+	result, err := uf.store.GetActive()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (uf *userFood) MarkAsUsed(id int) error {
+	if id < 0 {
+		return errors.New("ID cannot be negative")
+	}
+	return uf.store.MarkAsUsed(id)
 }
