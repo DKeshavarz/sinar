@@ -21,7 +21,9 @@ func main() {
 	optUsecase := usecase.NewOtpService(5, 3*time.Minute, otpStorage, otpSender)
 	userRepo := pg.NewUserRepository()
 	userUsecase := usecase.NewUser(userRepo)
-	server := server.New(optUsecase, userUsecase)
+	universityRepo := pg.NewUniversityRepository()
+	universityUsecase := usecase.NewUnivercity(universityRepo)
+	server := server.New(optUsecase, userUsecase, universityUsecase)
 
 	if err := server.Run(":8080"); err != nil {
 		fmt.Println(err)
