@@ -37,7 +37,12 @@ func (r *UserFoodRepository) GetAll() ([]*dto.UserFood, error) {
 
 	var userFoods []*dto.UserFood
 	for rows.Next() {
-		uf := &dto.UserFood{}
+		uf := &dto.UserFood{
+			User:       &domain.User{},
+			Restaurant: &domain.Restaurant{},
+			Food:       &domain.Food{},
+			Info:       &domain.UserFood{},
+		}
 		user := &domain.User{}
 		restaurant := &domain.Restaurant{}
 		food := &domain.Food{}
@@ -84,7 +89,12 @@ func (r *UserFoodRepository) GetByID(id int) (*dto.UserFood, error) {
         WHERE uf.id = $1`
 	row := r.DB.QueryRow(query, id)
 
-	uf := &dto.UserFood{}
+	uf := &dto.UserFood{
+		User:       &domain.User{},
+		Restaurant: &domain.Restaurant{},
+		Food:       &domain.Food{},
+		Info:       &domain.UserFood{},
+	}
 	user := &domain.User{}
 	restaurant := &domain.Restaurant{}
 	food := &domain.Food{}
@@ -136,7 +146,12 @@ func (r *UserFoodRepository) GetActive() ([]*dto.UserFood, error) {
 
 	var userFoods []*dto.UserFood
 	for rows.Next() {
-		uf := &dto.UserFood{}
+		uf := &dto.UserFood{
+			User:       &domain.User{},
+			Restaurant: &domain.Restaurant{},
+			Food:       &domain.Food{},
+			Info:       &domain.UserFood{},
+		}
 		user := &domain.User{}
 		restaurant := &domain.Restaurant{}
 		food := &domain.Food{}
@@ -166,6 +181,22 @@ func (r *UserFoodRepository) GetActive() ([]*dto.UserFood, error) {
 func (r *UserFoodRepository) MarkAsUsed(id int) error {
 	if id < 0 {
 		return errors.New("ID cannot be negative")
+	}
+
+	// First check if the food exists and is not already used
+	var expiresAt time.Time
+	checkQuery := `SELECT expires_at FROM user_foods WHERE id = $1`
+	err := r.DB.QueryRow(checkQuery, id).Scan(&expiresAt)
+	if err == sql.ErrNoRows {
+		return errors.New("userfood not found")
+	}
+	if err != nil {
+		return err
+	}
+
+	// Check if already used (expired)
+	if expiresAt.Before(time.Now()) {
+		return errors.New("food is already used/expired")
 	}
 
 	// Set expiration time to past to mark as used
