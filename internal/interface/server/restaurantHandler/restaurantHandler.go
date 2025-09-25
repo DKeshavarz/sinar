@@ -20,6 +20,17 @@ func Register(group *gin.RouterGroup, service usecase.Restaurant) {
 	group.GET(":university_id", h.GetByUniversityID)
 }
 
+// GetByUniversityID godoc
+// @Summary Get restaurants by university ID
+// @Description Get all restaurants for a specific university
+// @Tags Restaurant
+// @Accept json
+// @Produce json
+// @Param university_id path int true "University ID"
+// @Success 200 {array} domain.Restaurant "List of restaurants"
+// @Failure 400 {object} object{error=string} "Invalid university ID"
+// @Failure 404 {object} object{error=string} "No restaurants found"
+// @Router /restaurant/{university_id} [get]
 func (h *RestaurantHandler) GetByUniversityID(c *gin.Context) {
 	universityIDStr := c.Param("university_id")
 	universityID, err := strconv.Atoi(universityIDStr)

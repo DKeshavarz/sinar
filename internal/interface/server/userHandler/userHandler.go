@@ -17,6 +17,17 @@ func Register(group *gin.RouterGroup, service usecase.User) {
 	group.GET(":student_number", h.GetByStudentNumber)
 }
 
+// GetByStudentNumber godoc
+// @Summary Get user by student number
+// @Description Get user information with university details by student number
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param student_number path string true "Student Number"
+// @Success 200 {object} dto.UserWithUniversity "User with university information"
+// @Failure 400 {object} object{error=string} "Invalid student number"
+// @Failure 404 {object} object{error=string} "User not found"
+// @Router /user/{student_number} [get]
 func (h *UserHandler) GetByStudentNumber(c *gin.Context) {
 	number := c.Param("student_number")
 	result, err := h.service.GetByStudentNumber(number)

@@ -24,6 +24,15 @@ func Register(group *gin.RouterGroup, service usecase.UserFood) {
 	group.POST("/:id/use", h.UseFood)
 }
 
+// GetActiveFoods godoc
+// @Summary Get active user foods
+// @Description Get all user foods that have not expired yet
+// @Tags UserFood
+// @Accept json
+// @Produce json
+// @Success 200 {array} dto.UserFood "List of active user foods"
+// @Failure 500 {object} object{error=string} "Internal server error"
+// @Router /userfood/active [get]
 func (h *UserFoodHandler) GetActiveFoods(c *gin.Context) {
 	result, err := h.service.GetActive()
 	if err != nil {
@@ -33,6 +42,17 @@ func (h *UserFoodHandler) GetActiveFoods(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
+// GetByID godoc
+// @Summary Get user food by ID
+// @Description Get specific user food details by ID
+// @Tags UserFood
+// @Accept json
+// @Produce json
+// @Param id path int true "UserFood ID"
+// @Success 200 {object} dto.UserFood "User food details"
+// @Failure 400 {object} object{error=string} "Invalid userfood ID"
+// @Failure 404 {object} object{error=string} "User food not found"
+// @Router /userfood/{id} [get]
 func (h *UserFoodHandler) GetByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -49,6 +69,18 @@ func (h *UserFoodHandler) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
+// Create godoc
+// @Summary Create user food purchase
+// @Description Create a new user food purchase (supports both single object and array formats)
+// @Tags UserFood
+// @Accept json
+// @Produce json
+// @Param request body object{user_id=int,food_id=int,restaurant_id=int,price=int,sinar_price=int,code=string,expiration_hours=int} true "Purchase details (single object format)"
+// @Param request body array true "Purchase details (array format)"
+// @Success 201 {object} domain.UserFood "Created user food (single object)"
+// @Success 201 {array} domain.UserFood "Created user foods (array)"
+// @Failure 400 {object} object{error=string} "Invalid request"
+// @Router /userfood/ [post]
 func (h *UserFoodHandler) Create(c *gin.Context) {
 	// First, try to parse as array
 	var reqArray []struct {
@@ -109,6 +141,17 @@ func (h *UserFoodHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, result)
 }
 
+// UseFood godoc
+// @Summary Mark food as used
+// @Description Mark a user food as used/expired
+// @Tags UserFood
+// @Accept json
+// @Produce json
+// @Param id path int true "UserFood ID"
+// @Success 200 {object} object{message=string} "Food marked as used"
+// @Failure 400 {object} object{error=string} "Invalid userfood ID"
+// @Failure 409 {object} object{error=string} "Food already used/expired"
+// @Router /userfood/{id}/use [post]
 func (h *UserFoodHandler) UseFood(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -119,7 +162,7 @@ func (h *UserFoodHandler) UseFood(c *gin.Context) {
 
 	err = h.service.MarkAsUsed(id)
 	if err != nil {
-	
+
 		if err.Error() == "food is already used/expired" {
 			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return

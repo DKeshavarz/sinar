@@ -1,0 +1,482 @@
+basePath: /
+definitions:
+  domain.Food:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  domain.Restaurant:
+    properties:
+      color:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      sex:
+        type: boolean
+      university_id:
+        type: integer
+    type: object
+  domain.University:
+    properties:
+      id:
+        type: integer
+      location:
+        type: string
+      logo:
+        type: string
+      name:
+        type: string
+    type: object
+  domain.User:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      phone:
+        type: string
+      profile_pic:
+        type: string
+      sex:
+        type: boolean
+      student_num:
+        type: string
+      university_id:
+        type: integer
+    type: object
+  domain.UserFood:
+    properties:
+      Restaurant_id:
+        type: integer
+      code:
+        type: string
+      created_at:
+        type: string
+      expires_at:
+        type: string
+      food_id:
+        type: integer
+      id:
+        type: integer
+      price:
+        type: integer
+      sinar_price:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  dto.UserFood:
+    properties:
+      food:
+        $ref: '#/definitions/domain.Food'
+      info:
+        $ref: '#/definitions/domain.UserFood'
+      restaurant:
+        $ref: '#/definitions/domain.Restaurant'
+      user:
+        $ref: '#/definitions/domain.User'
+    type: object
+  dto.UserWithUniversity:
+    properties:
+      university:
+        $ref: '#/definitions/domain.University'
+      user:
+        $ref: '#/definitions/domain.User'
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: A comprehensive food ordering and management system for universities
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Sinar API
+  version: "1.0"
+paths:
+  /food/:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all available foods
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of all foods
+          schema:
+            items:
+              $ref: '#/definitions/domain.Food'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get all foods
+      tags:
+      - Food
+  /otp/create:
+    post:
+      consumes:
+      - application/json
+      description: Send OTP code to user's phone number
+      parameters:
+      - description: Phone number
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            phone:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP sent successfully
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Request OTP
+      tags:
+      - OTP
+  /otp/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verify OTP code sent to user's phone
+      parameters:
+      - description: Phone number and OTP code
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            otp:
+              type: string
+            phone:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP verified successfully
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "401":
+          description: Invalid OTP
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Verify OTP
+      tags:
+      - OTP
+  /restaurant/{university_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get all restaurants for a specific university
+      parameters:
+      - description: University ID
+        in: path
+        name: university_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of restaurants
+          schema:
+            items:
+              $ref: '#/definitions/domain.Restaurant'
+            type: array
+        "400":
+          description: Invalid university ID
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: No restaurants found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get restaurants by university ID
+      tags:
+      - Restaurant
+  /university/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get university information by university ID
+      parameters:
+      - description: University ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: University information
+          schema:
+            $ref: '#/definitions/domain.University'
+        "400":
+          description: Invalid university ID
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: University not found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get university by ID
+      tags:
+      - University
+  /user/{student_number}:
+    get:
+      consumes:
+      - application/json
+      description: Get user information with university details by student number
+      parameters:
+      - description: Student Number
+        in: path
+        name: student_number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User with university information
+          schema:
+            $ref: '#/definitions/dto.UserWithUniversity'
+        "400":
+          description: Invalid student number
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get user by student number
+      tags:
+      - User
+  /userfood/:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user food purchase (supports both single object and
+        array formats)
+      parameters:
+      - description: Purchase details (single object format)
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            code:
+              type: string
+            expiration_hours:
+              type: integer
+            food_id:
+              type: integer
+            price:
+              type: integer
+            restaurant_id:
+              type: integer
+            sinar_price:
+              type: integer
+            user_id:
+              type: integer
+          type: object
+      - description: Purchase details (array format)
+        in: body
+        name: request
+        required: true
+        schema:
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created user foods (array)
+          schema:
+            items:
+              $ref: '#/definitions/domain.UserFood'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Create user food purchase
+      tags:
+      - UserFood
+  /userfood/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get specific user food details by ID
+      parameters:
+      - description: UserFood ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User food details
+          schema:
+            $ref: '#/definitions/dto.UserFood'
+        "400":
+          description: Invalid userfood ID
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "404":
+          description: User food not found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get user food by ID
+      tags:
+      - UserFood
+  /userfood/{id}/use:
+    post:
+      consumes:
+      - application/json
+      description: Mark a user food as used/expired
+      parameters:
+      - description: UserFood ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Food marked as used
+          schema:
+            properties:
+              message:
+                type: string
+            type: object
+        "400":
+          description: Invalid userfood ID
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        "409":
+          description: Food already used/expired
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Mark food as used
+      tags:
+      - UserFood
+  /userfood/active:
+    get:
+      consumes:
+      - application/json
+      description: Get all user foods that have not expired yet
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of active user foods
+          schema:
+            items:
+              $ref: '#/definitions/dto.UserFood'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get active user foods
+      tags:
+      - UserFood
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
