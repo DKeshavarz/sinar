@@ -119,7 +119,7 @@ func (h *UserFoodHandler) UseFood(c *gin.Context) {
 
 	err = h.service.MarkAsUsed(id)
 	if err != nil {
-		// Check if it's an "already used" error
+	
 		if err.Error() == "food is already used/expired" {
 			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 			return
