@@ -13,7 +13,7 @@ var db *sql.DB
 func init() {
 	var err error
 
-	connStr := "postgres://user:password@localhost:5432/mydb?sslmode=disable"
+	connStr := "postgres://user:password@localhost:5430/mydb?sslmode=disable"
 	db, err = sql.Open("postgres", connStr)
 
 	if err != nil {
