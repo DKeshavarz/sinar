@@ -1,6 +1,7 @@
 package userfoodhandler
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"time"
@@ -82,18 +83,47 @@ func (h *UserFoodHandler) GetByID(c *gin.Context) {
 // @Failure 400 {object} object{error=string} "Invalid request"
 // @Router /userfood/ [post]
 func (h *UserFoodHandler) Create(c *gin.Context) {
-	// First, try to parse as array
-	var reqArray []struct {
-		UserID       int    `json:"user_id" binding:"required"`
-		FoodID       int    `json:"food_id" binding:"required"`
-		RestaurantID int    `json:"restaurant_id" binding:"required"`
-		Price        int    `json:"price" binding:"required"`
-		SinarPrice   int    `json:"sinar_price" binding:"required"`
-		Code         string `json:"code" binding:"required"`
-		ExpiresAt    string `json:"expires_at" binding:"required"`
+	// Read the raw body once
+	body, err := c.GetRawData()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "failed to read request body"})
+		return
 	}
 
-	if err := c.ShouldBindJSON(&reqArray); err == nil && len(reqArray) > 0 {
+	// Try to parse as single object with expiration_hours first (most common case)
+	var req struct {
+		UserID          int    `json:"user_id"`
+		FoodID          int    `json:"food_id"`
+		RestaurantID    int    `json:"restaurant_id"`
+		Price           int    `json:"price"`
+		SinarPrice      int    `json:"sinar_price"`
+		Code            string `json:"code"`
+		ExpirationHours int    `json:"expiration_hours"`
+	}
+
+	if err := json.Unmarshal(body, &req); err == nil && req.UserID > 0 && req.FoodID > 0 && req.RestaurantID > 0 && req.Code != "" && req.ExpirationHours > 0 {
+		// Handle single object input
+		result, err := h.service.Purchase(req.UserID, req.FoodID, req.RestaurantID, req.Price, req.SinarPrice, req.Code, req.ExpirationHours)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, result)
+		return
+	}
+
+	// If single object parsing failed, try to parse as array
+	var reqArray []struct {
+		UserID       int    `json:"user_id"`
+		FoodID       int    `json:"food_id"`
+		RestaurantID int    `json:"restaurant_id"`
+		Price        int    `json:"price"`
+		SinarPrice   int    `json:"sinar_price"`
+		Code         string `json:"code"`
+		ExpiresAt    string `json:"expires_at"`
+	}
+
+	if err := json.Unmarshal(body, &reqArray); err == nil && len(reqArray) > 0 {
 		// Handle array input
 		var results []interface{}
 		for _, req := range reqArray {
@@ -117,28 +147,8 @@ func (h *UserFoodHandler) Create(c *gin.Context) {
 		return
 	}
 
-	// Fallback to single object with expiration_hours
-	var req struct {
-		UserID          int    `json:"user_id" binding:"required"`
-		FoodID          int    `json:"food_id" binding:"required"`
-		RestaurantID    int    `json:"restaurant_id" binding:"required"`
-		Price           int    `json:"price" binding:"required"`
-		SinarPrice      int    `json:"sinar_price" binding:"required"`
-		Code            string `json:"code" binding:"required"`
-		ExpirationHours int    `json:"expiration_hours" binding:"required"`
-	}
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	result, err := h.service.Purchase(req.UserID, req.FoodID, req.RestaurantID, req.Price, req.SinarPrice, req.Code, req.ExpirationHours)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusCreated, result)
+	// If both parsing attempts failed, return error
+	c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON format or missing required fields"})
 }
 
 // UseFood godoc
