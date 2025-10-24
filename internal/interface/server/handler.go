@@ -4,6 +4,7 @@ import (
 	foodhandler "github.com/DKeshavarz/sinar/internal/interface/server/foodHandler"
 	otphandler "github.com/DKeshavarz/sinar/internal/interface/server/otpHandler"
 	restauranthandler "github.com/DKeshavarz/sinar/internal/interface/server/restaurantHandler"
+	"github.com/DKeshavarz/sinar/internal/interface/server/statics"
 	universityhandler "github.com/DKeshavarz/sinar/internal/interface/server/universityHandler"
 	userhandler "github.com/DKeshavarz/sinar/internal/interface/server/userHandler"
 	userfoodhandler "github.com/DKeshavarz/sinar/internal/interface/server/userfoodHandler"
@@ -24,4 +25,5 @@ func setup(r *gin.Engine, otp *usecase.OtpService, user usecase.User, university
 	userfoodhandler.Register(r.Group("/userfood/"), userFood)
 	restauranthandler.Register(r.Group("/restaurant/"), restaurant)
 	foodhandler.Register(r.Group("/food"), food)
+	statics.Register(r.Group("static"))
 }
