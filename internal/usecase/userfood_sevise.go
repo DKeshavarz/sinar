@@ -14,6 +14,7 @@ type UserFoodStore interface {
 	GetActive() ([]*dto.UserFood, error)
 	Create(userFood *domain.UserFood) error
 	MarkAsUsed(id int) error
+	Delete(id int) error
 }
 
 type UserFood interface {
@@ -104,4 +105,9 @@ func (uf *userFood) MarkAsUsed(id int) error {
 		return errors.New("ID cannot be negative")
 	}
 	return uf.store.MarkAsUsed(id)
+}
+
+func (uf *userFood) Delte(id int) error {
+	
+	return uf.store.Delete(id)
 }

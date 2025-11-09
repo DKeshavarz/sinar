@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/DKeshavarz/sinar/internal/domain"
@@ -212,6 +213,34 @@ func (r *UserFoodRepository) MarkAsUsed(id int) error {
 	}
 	if rowsAffected == 0 {
 		return errors.New("userfood not found")
+	}
+
+	return nil
+}
+
+func (r *UserFoodRepository) Delete(id int) error {
+	if id < 0 {
+		return errors.New("ID cannot be negative")
+	}
+
+	return nil
+}
+
+func (r *UserFoodRepository) DeleteByID(id int) error {
+	query := `DELETE FROM user_foods WHERE id = $1`
+
+	result, err := r.DB.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete user_food with id %d: %w", id, err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("user_food with id %d not found", id)
 	}
 
 	return nil
