@@ -9,7 +9,8 @@ import (
 const (
 
 )
+
 func Register(group *gin.RouterGroup) {
 	os.MkdirAll("./uploads", 0755)
-	group.Static("/uploads/users", "./uploads")
+	group.Static("/uploads", "./uploads")
 }
