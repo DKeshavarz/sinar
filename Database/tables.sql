@@ -27,7 +27,8 @@ CREATE TABLE restaurants (
 
 CREATE TABLE foods (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255)
+    name VARCHAR(255),
+    pic VARCHAR(255)
 );
 
 CREATE TABLE user_foods (
