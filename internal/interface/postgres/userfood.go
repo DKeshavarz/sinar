@@ -219,14 +219,7 @@ func (r *UserFoodRepository) MarkAsUsed(id int) error {
 }
 
 func (r *UserFoodRepository) Delete(id int) error {
-	if id < 0 {
-		return errors.New("ID cannot be negative")
-	}
-
-	return nil
-}
-
-func (r *UserFoodRepository) DeleteByID(id int) error {
+	fmt.Println("call by.." , id )
 	query := `DELETE FROM user_foods WHERE id = $1`
 
 	result, err := r.DB.Exec(query, id)

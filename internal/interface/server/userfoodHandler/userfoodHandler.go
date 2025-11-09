@@ -21,6 +21,7 @@ func Register(group *gin.RouterGroup, service usecase.UserFood) {
 
 	group.GET("/active", h.GetActiveFoods)
 	group.GET(":id", h.GetByID)
+	group.DELETE(":id", h.DeleteByID)
 	group.POST("/", h.Create)
 	group.POST("/:id/use", h.UseFood)
 }
@@ -181,4 +182,30 @@ func (h *UserFoodHandler) UseFood(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "food marked as used"})
+}
+
+// GetByID godoc
+// @Summary Delete user food by ID
+// @Description Delete specific user food details by ID
+// @Tags UserFood
+// @Accept json
+// @Produce json
+// @Param id path int true "UserFood ID"
+// @Success 200 {object} dto.UserFood "Deleted"
+// @Failure 404 {object} object{error=string} "User food not found"
+// @Router /userfood/{id} [get]
+func (h *UserFoodHandler) DeleteByID(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid userfood ID"})
+		return
+	}
+
+	err = h.service.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, "Deleted")
 }

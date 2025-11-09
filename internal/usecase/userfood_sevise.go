@@ -23,6 +23,7 @@ type UserFood interface {
 	GetActive() ([]*dto.UserFood, error)
 	Purchase(userID, foodID, restaurantID, price, sinarPrice int, code string, expirationHours int) (*domain.UserFood, error)
 	MarkAsUsed(id int) error
+	Delete(id int) error
 }
 
 type userFood struct {
@@ -107,7 +108,6 @@ func (uf *userFood) MarkAsUsed(id int) error {
 	return uf.store.MarkAsUsed(id)
 }
 
-func (uf *userFood) Delte(id int) error {
-	
+func (uf *userFood) Delete(id int) error {
 	return uf.store.Delete(id)
 }
