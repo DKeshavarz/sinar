@@ -77,11 +77,10 @@ func (h *UserFoodHandler) GetByID(c *gin.Context) {
 // @Tags UserFood
 // @Accept json
 // @Produce json
-// @Param request body object{user_id=int,food_id=int,restaurant_id=int,price=int,sinar_price=int,code=string,expiration_hours=int} true "Purchase details (single object format)"
-// @Param request body array true "Purchase details (array format)"
+// @Param single body UserFoodSingleRequest false "Purchase details (single object format)"
+// @Param array body []UserFoodArrayRequest false "Purchase details (array format)"
 // @Success 201 {object} domain.UserFood "Created user food (single object)"
-// @Success 201 {array} domain.UserFood "Created user foods (array)"
-// @Failure 400 {object} object{error=string} "Invalid request"
+// @Failure 400 {object} map[string]string "Invalid request"
 // @Router /userfood/ [post]
 func (h *UserFoodHandler) Create(c *gin.Context) {
 	// Read the raw body once
@@ -92,15 +91,7 @@ func (h *UserFoodHandler) Create(c *gin.Context) {
 	}
 
 	// Try to parse as single object with expiration_hours first (most common case)
-	var req struct {
-		UserID          int    `json:"user_id"`
-		FoodID          int    `json:"food_id"`
-		RestaurantID    int    `json:"restaurant_id"`
-		Price           int    `json:"price"`
-		SinarPrice      int    `json:"sinar_price"`
-		Code            string `json:"code"`
-		ExpirationHours int    `json:"expiration_hours"`
-	}
+	var req UserFoodSingleRequest
 
 	if err := json.Unmarshal(body, &req); err == nil && req.UserID > 0 && req.FoodID > 0 && req.RestaurantID > 0 && req.Code != "" && req.ExpirationHours > 0 {
 		// Handle single object input
