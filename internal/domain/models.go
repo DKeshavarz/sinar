@@ -31,6 +31,7 @@ type Restaurant struct {
 type Food struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
+	Pic  string `json:"pic"`
 }
 
 type UserFood struct {
