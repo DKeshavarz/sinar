@@ -24,8 +24,8 @@ func (r *UserFoodRepository) GetAll() ([]*dto.UserFood, error) {
 	query := `
         SELECT uf.id, u.id, u.first_name, u.last_name, u.phone, u.profile_pic, u.student_num, u.sex, u.university_id,
                r.id, r.university_id, r.name, r.sex, r.color,
-               f.id, f.name,
-               uf.user_id, uf.food_id, uf.restaurant_id, uf.price, uf.sinar_price, uf.code, uf.created_at, uf.expires_at
+               f.id, f.name, f.pic,
+               uf.id, uf.user_id, uf.food_id, uf.restaurant_id, uf.price, uf.sinar_price, uf.code, uf.created_at, uf.expires_at
         FROM user_foods uf
         JOIN users u ON uf.user_id = u.id
         JOIN restaurants r ON uf.restaurant_id = r.id
@@ -52,8 +52,8 @@ func (r *UserFoodRepository) GetAll() ([]*dto.UserFood, error) {
 			&uf.Info.ID,
 			&user.ID, &user.FirstName, &user.LastName, &user.Phone, &user.ProfilePic, &user.StudentNum, &user.Sex, &user.UniversityID,
 			&restaurant.ID, &restaurant.UniversityID, &restaurant.Name, &restaurant.Sex, &restaurant.Color,
-			&food.ID, &food.Name,
-			&info.UserID, &info.FoodID, &info.RestaurantID, &info.Price, &info.SinarPrice, &info.Code, &info.CreatedAt, &info.ExpiresAt,
+			&food.ID, &food.Name, &food.Pic,
+			&info.ID, &info.UserID, &info.FoodID, &info.RestaurantID, &info.Price, &info.SinarPrice, &info.Code, &info.CreatedAt, &info.ExpiresAt,
 		)
 		if err != nil {
 			return nil, err
@@ -81,8 +81,8 @@ func (r *UserFoodRepository) GetByID(id int) (*dto.UserFood, error) {
 	query := `
         SELECT uf.id, u.id, u.first_name, u.last_name, u.phone, u.profile_pic, u.student_num, u.sex, u.university_id,
                r.id, r.university_id, r.name, r.sex, r.color,
-               f.id, f.name,
-               uf.user_id, uf.food_id, uf.restaurant_id, uf.price, uf.sinar_price, uf.code, uf.created_at, uf.expires_at
+               f.id, f.name, f.pic,
+               uf.id, uf.user_id, uf.food_id, uf.restaurant_id, uf.price, uf.sinar_price, uf.code, uf.created_at, uf.expires_at
         FROM user_foods uf
         JOIN users u ON uf.user_id = u.id
         JOIN restaurants r ON uf.restaurant_id = r.id
@@ -104,8 +104,8 @@ func (r *UserFoodRepository) GetByID(id int) (*dto.UserFood, error) {
 		&uf.Info.ID,
 		&user.ID, &user.FirstName, &user.LastName, &user.Phone, &user.ProfilePic, &user.StudentNum, &user.Sex, &user.UniversityID,
 		&restaurant.ID, &restaurant.UniversityID, &restaurant.Name, &restaurant.Sex, &restaurant.Color,
-		&food.ID, &food.Name,
-		&info.UserID, &info.FoodID, &info.RestaurantID, &info.Price, &info.SinarPrice, &info.Code, &info.CreatedAt, &info.ExpiresAt,
+		&food.ID, &food.Name, &food.Pic,
+		&info.ID, &info.UserID, &info.FoodID, &info.RestaurantID, &info.Price, &info.SinarPrice, &info.Code, &info.CreatedAt, &info.ExpiresAt,
 	)
 	if err == sql.ErrNoRows {
 		return nil, errors.New("user-food relationship not found")
@@ -132,8 +132,8 @@ func (r *UserFoodRepository) GetActive() ([]*dto.UserFood, error) {
 	query := `
         SELECT uf.id, u.id, u.first_name, u.last_name, u.phone, u.profile_pic, u.student_num, u.sex, u.university_id,
                r.id, r.university_id, r.name, r.sex, r.color,
-               f.id, f.name,
-               uf.user_id, uf.food_id, uf.restaurant_id, uf.price, uf.sinar_price, uf.code, uf.created_at, uf.expires_at
+               f.id, f.name, f.pic,
+               uf.id ,uf.user_id, uf.food_id, uf.restaurant_id, uf.price, uf.sinar_price, uf.code, uf.created_at, uf.expires_at
         FROM user_foods uf
         JOIN users u ON uf.user_id = u.id
         JOIN restaurants r ON uf.restaurant_id = r.id
@@ -161,8 +161,8 @@ func (r *UserFoodRepository) GetActive() ([]*dto.UserFood, error) {
 			&uf.Info.ID,
 			&user.ID, &user.FirstName, &user.LastName, &user.Phone, &user.ProfilePic, &user.StudentNum, &user.Sex, &user.UniversityID,
 			&restaurant.ID, &restaurant.UniversityID, &restaurant.Name, &restaurant.Sex, &restaurant.Color,
-			&food.ID, &food.Name,
-			&info.UserID, &info.FoodID, &info.RestaurantID, &info.Price, &info.SinarPrice, &info.Code, &info.CreatedAt, &info.ExpiresAt,
+			&food.ID, &food.Name, &food.Pic,
+			&info.ID, &info.UserID, &info.FoodID, &info.RestaurantID, &info.Price, &info.SinarPrice, &info.Code, &info.CreatedAt, &info.ExpiresAt,
 		)
 		if err != nil {
 			return nil, err

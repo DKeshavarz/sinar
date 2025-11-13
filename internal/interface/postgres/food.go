@@ -18,7 +18,7 @@ func NewFoodRepository() *FoodRepository{
 
 func (r *FoodRepository) GetAll() ([]*domain.Food, error) {
     query := `
-        SELECT id, name
+        SELECT id, name, pic
         FROM foods`
     rows, err := r.DB.Query(query)
     if err != nil {
@@ -29,7 +29,7 @@ func (r *FoodRepository) GetAll() ([]*domain.Food, error) {
     var foods []*domain.Food
     for rows.Next() {
         food := &domain.Food{}
-        err := rows.Scan(&food.ID, &food.Name)
+        err := rows.Scan(&food.ID, &food.Name, &food.Pic)
         if err != nil {
             return nil, err
         }
