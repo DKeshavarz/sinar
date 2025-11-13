@@ -6,6 +6,8 @@ definitions:
         type: integer
       name:
         type: string
+      pic:
+        type: string
     type: object
   domain.Restaurant:
     properties:
@@ -88,6 +90,54 @@ definitions:
         $ref: '#/definitions/domain.University'
       user:
         $ref: '#/definitions/domain.User'
+    type: object
+  userfoodhandler.UserFoodArrayRequest:
+    properties:
+      code:
+        example: XYZ456
+        type: string
+      expires_at:
+        example: "2025-12-31T23:59:59Z"
+        type: string
+      food_id:
+        example: 101
+        type: integer
+      price:
+        example: 25000
+        type: integer
+      restaurant_id:
+        example: 12
+        type: integer
+      sinar_price:
+        example: 20000
+        type: integer
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  userfoodhandler.UserFoodSingleRequest:
+    properties:
+      code:
+        example: ABC123
+        type: string
+      expiration_hours:
+        example: 24
+        type: integer
+      food_id:
+        example: 101
+        type: integer
+      price:
+        example: 25000
+        type: integer
+      restaurant_id:
+        example: 12
+        type: integer
+      sinar_price:
+        example: 20000
+        type: integer
+      user_id:
+        example: 1
+        type: integer
     type: object
 host: localhost:8080
 info:
@@ -329,46 +379,28 @@ paths:
       parameters:
       - description: Purchase details (single object format)
         in: body
-        name: request
-        required: true
+        name: single
         schema:
-          properties:
-            code:
-              type: string
-            expiration_hours:
-              type: integer
-            food_id:
-              type: integer
-            price:
-              type: integer
-            restaurant_id:
-              type: integer
-            sinar_price:
-              type: integer
-            user_id:
-              type: integer
-          type: object
+          $ref: '#/definitions/userfoodhandler.UserFoodSingleRequest'
       - description: Purchase details (array format)
         in: body
-        name: request
-        required: true
+        name: array
         schema:
+          items:
+            $ref: '#/definitions/userfoodhandler.UserFoodArrayRequest'
           type: array
       produces:
       - application/json
       responses:
         "201":
-          description: Created user foods (array)
+          description: Created user food (single object)
           schema:
-            items:
-              $ref: '#/definitions/domain.UserFood'
-            type: array
+            $ref: '#/definitions/domain.UserFood'
         "400":
           description: Invalid request
           schema:
-            properties:
-              error:
-                type: string
+            additionalProperties:
+              type: string
             type: object
       summary: Create user food purchase
       tags:
@@ -377,7 +409,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get specific user food details by ID
+      description: Delete specific user food details by ID
       parameters:
       - description: UserFood ID
         in: path
@@ -388,16 +420,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: User food details
+          description: Deleted
           schema:
             $ref: '#/definitions/dto.UserFood'
-        "400":
-          description: Invalid userfood ID
-          schema:
-            properties:
-              error:
-                type: string
-            type: object
         "404":
           description: User food not found
           schema:
@@ -405,7 +430,7 @@ paths:
               error:
                 type: string
             type: object
-      summary: Get user food by ID
+      summary: Delete user food by ID
       tags:
       - UserFood
   /userfood/{id}/use:

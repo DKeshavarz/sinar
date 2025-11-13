@@ -377,64 +377,37 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Purchase details (single object format)",
-                        "name": "request",
+                        "name": "single",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "code": {
-                                    "type": "string"
-                                },
-                                "expiration_hours": {
-                                    "type": "integer"
-                                },
-                                "food_id": {
-                                    "type": "integer"
-                                },
-                                "price": {
-                                    "type": "integer"
-                                },
-                                "restaurant_id": {
-                                    "type": "integer"
-                                },
-                                "sinar_price": {
-                                    "type": "integer"
-                                },
-                                "user_id": {
-                                    "type": "integer"
-                                }
-                            }
+                            "$ref": "#/definitions/userfoodhandler.UserFoodSingleRequest"
                         }
                     },
                     {
                         "description": "Purchase details (array format)",
-                        "name": "request",
+                        "name": "array",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/userfoodhandler.UserFoodArrayRequest"
+                            }
                         }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created user foods (array)",
+                        "description": "Created user food (single object)",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.UserFood"
-                            }
+                            "$ref": "#/definitions/domain.UserFood"
                         }
                     },
                     "400": {
                         "description": "Invalid request",
                         "schema": {
                             "type": "object",
-                            "properties": {
-                                "error": {
-                                    "type": "string"
-                                }
+                            "additionalProperties": {
+                                "type": "string"
                             }
                         }
                     }
@@ -480,7 +453,7 @@ const docTemplate = `{
         },
         "/userfood/{id}": {
             "get": {
-                "description": "Get specific user food details by ID",
+                "description": "Delete specific user food details by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -490,7 +463,7 @@ const docTemplate = `{
                 "tags": [
                     "UserFood"
                 ],
-                "summary": "Get user food by ID",
+                "summary": "Delete user food by ID",
                 "parameters": [
                     {
                         "type": "integer",
@@ -502,20 +475,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "User food details",
+                        "description": "Deleted",
                         "schema": {
                             "$ref": "#/definitions/dto.UserFood"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid userfood ID",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "error": {
-                                    "type": "string"
-                                }
-                            }
                         }
                     },
                     "404": {
@@ -600,6 +562,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "pic": {
                     "type": "string"
                 }
             }
@@ -727,6 +692,72 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/domain.User"
+                }
+            }
+        },
+        "userfoodhandler.UserFoodArrayRequest": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "XYZ456"
+                },
+                "expires_at": {
+                    "type": "string",
+                    "example": "2025-12-31T23:59:59Z"
+                },
+                "food_id": {
+                    "type": "integer",
+                    "example": 101
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 25000
+                },
+                "restaurant_id": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "sinar_price": {
+                    "type": "integer",
+                    "example": 20000
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "userfoodhandler.UserFoodSingleRequest": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "ABC123"
+                },
+                "expiration_hours": {
+                    "type": "integer",
+                    "example": 24
+                },
+                "food_id": {
+                    "type": "integer",
+                    "example": 101
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 25000
+                },
+                "restaurant_id": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "sinar_price": {
+                    "type": "integer",
+                    "example": 20000
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         }

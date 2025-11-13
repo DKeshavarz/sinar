@@ -1,7 +1,7 @@
 # Project settings
-BINARY_NAME=armis
+BINARY_NAME=food-pilot
 PKG=./...
-MAIN=./main.go
+MAIN=main.go
 BUILD_DIR=build
 
 # Git info
@@ -28,6 +28,11 @@ test: ## Run tests
 dep: ## Download and vendor dependencies
 	go mod tidy
 	go mod vendor
+
+swag: ## Generate Swagger docs (requires github.com/swaggo/swag)
+	@which swag >/dev/null 2>&1 || (echo "Installing swag..." && go install github.com/swaggo/swag/cmd/swag@latest)
+	swag init -g main.go -o docs
+	@echo "Swagger docs generated in ./docs"
 
 clean: ## Remove build artifacts
 	rm -rf $(BUILD_DIR)
